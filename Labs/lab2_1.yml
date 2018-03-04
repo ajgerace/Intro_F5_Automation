@@ -1,0 +1,20 @@
+---
+- name: Lab2 - Create a node using internal variables
+  hosts: bigip-a
+  connection: local
+  vars:
+   user: admin
+   password: admin
+
+  tasks:
+     - name: Create node using bigip_node module
+       bigip_node:
+          server: "{{ inventory_hostname }}"
+          user: "{{ user }}"
+          password: "{{ password }}"
+          validate_certs: no
+          name: "Server1"
+          address: "10.1.10.100"
+          state: present
+       delegate_to: localhost
+

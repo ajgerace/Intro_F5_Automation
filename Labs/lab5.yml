@@ -1,0 +1,79 @@
+---
+
+- name: Lab 5 - Create application
+  connection: local
+  gather_facts: no
+  hosts: bigip-a
+
+  vars:
+    servers: 
+      - { name: Server1, address: "10.1.10.100", sessionState: "enabled" }
+      - { name: Server2, address: "10.1.10.101", sessionState: "disabled"  }
+    userName: admin
+    password: admin
+
+
+  tasks:
+     - name: Create nodes using with_items
+       bigip_node:
+          user: "{{ userName }}"
+          password: "{{ password }}"
+          server: "{{ inventory_hostname }}"
+          session_state: "{{ item.sessionState }}"
+          validate_certs: no
+          name: "{{ item.name }}"
+          address: "{{ item.address }}"
+       delegate_to: localhost 
+       with_items: "{{ servers }}"
+
+     - name: Create pool
+       bigip_pool:
+          user: "{{ userName }}"
+          password: "{{ password }}"
+          server: "{{ inventory_hostname }}"
+          validate_certs: no
+          name: red_pool
+       delegate_to: localhost
+
+     - name: Create pool members
+       bigip_pool_member:
+          user: "{{ userName }}"
+          password: "{{ password }}"
+          server: "{{ inventory_hostname }}"
+          validate_certs: no
+          pool: red_pool
+          address: "{{ item.name }}"
+          port: 80
+       delegate_to: localhost
+       with_items: "{{ servers }}"
+
+
+     - name: Install maintenance page iRule
+       bigip_irule: 
+          user: "{{ userName }}"
+          password: "{{ password }}"
+          server: "{{ inventory_hostname }}"
+          validate_certs: no
+          module: ltm
+          name: maint_pg_irule
+          content: "{{ lookup('file', '/home/ubuntu/ansible/tmp/maint_pg.irule') }}"
+       delegate_to: localhost
+     
+     - name: Create virtual server
+       bigip_virtual_server:
+         server: "{{inventory_hostname}}"
+         user: "{{ userName }}"
+         password: "{{ password }}"
+         validate_certs: no 
+         partition: Common
+         name: red_vs
+         destination: "{{ vsAddr }}"
+         port: "{{ vsPort }}"  
+         all_profiles:
+           - http
+         all_rules:
+           - maint_pg_irule
+       delegate_to: localhost
+
+
+

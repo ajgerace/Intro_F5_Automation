@@ -1,0 +1,23 @@
+---
+
+- name: Lab 5.1 - Toggle pool member session state
+  connection: local
+  gather_facts: no
+  hosts: bigip-a
+
+  vars_files:
+    - "password.yml"
+
+  tasks:
+     - name: Toggle pool member state
+       bigip_pool_member:
+          user: "{{ userName }}"
+          password: "{{ password }}"
+          server: "{{ inventory_hostname }}"
+          validate_certs: no
+          pool: "{{ poolName }}"
+          address: "{{ serverName }}"
+          port: "{{ serverPort }}"
+          session_state: "{{ sessionState }}"
+       delegate_to: localhost
+

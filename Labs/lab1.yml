@@ -1,0 +1,16 @@
+---
+
+- name: Lab1 - Create a node
+  hosts: bigip-a
+  connection: local
+  tasks:
+     - name: Create node using bigip_node module
+       bigip_node:
+          server: "{{ inventory_hostname }}"
+          user: admin
+          password: admin
+          validate_certs: no
+          address: "10.1.10.100"
+          name: "Server1"
+       delegate_to: localhost
+

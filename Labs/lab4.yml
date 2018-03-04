@@ -1,0 +1,28 @@
+---
+
+- name: Lab 4 - Create nodes using bigip_node module and with_items and encrypted variables
+  connection: local
+  gather_facts: no
+  hosts: bigip-a
+
+  vars:
+    servers:
+      - { name: Server1, address: "10.1.10.100", sessionState: "enabled" }
+      - { name: Server2, address: "10.1.10.101", sessionState: "disabled"  }
+
+  vars_files:
+    - "password.yml"
+
+  tasks:
+     - name: Create nodes using with_items
+       bigip_node:
+          user: "{{ userName }}"
+          password: "{{ password }}"
+          server: "{{ inventory_hostname }}"
+          session_state: "{{ item.sessionState }}"
+          validate_certs: no
+          name: "{{ item.name }}"
+          address: "{{ item.address }}"
+       delegate_to: localhost
+       with_items: "{{ servers }}"
+
