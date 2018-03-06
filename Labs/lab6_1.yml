@@ -16,16 +16,16 @@
     sslKey: "default.key"
     sslCert: "default.crt"
     servicePort: "8002"
-    node1: server1
-    node2: server2
+    node1: Server1
+    node2: Server2
 
   tasks:
        - name: Create HTTP Application
          bigip_iapp_service:
-           password: "{{ userName }}"
+           user: "{{ userName }}"
            server: "{{ inventory_hostname }}"
            state: present
-           user: "{{ password }}"
+           password: "{{ password }}"
            validate_certs: no
            name: "{{ vsName }}"
            template: "{{ templateName }}"

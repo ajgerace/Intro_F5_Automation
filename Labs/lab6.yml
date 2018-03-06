@@ -13,10 +13,10 @@
        - name: Install HTTP iApp
          bigip_iapp_template:
            content: "{{ lookup('file', '/home/ubuntu/ansible/tmp/f5.http.v1.2.0.tmpl') }}"
-           password: "{{ userName }}"
+           username: "{{ userName }}"
            server: "{{ inventory_hostname }}"
            state: present
-           user: "{{ password }}"
+           password: "{{ password }}"
            validate_certs: no
          delegate_to: localhost
 
