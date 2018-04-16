@@ -12,7 +12,7 @@
             "value": "{{ dnsLabel }}"
         }, 
         "instanceName": {
-            "value": "{{ instanceName }}"
+            "value": "{{ instanceName }}" 
         }, 
         "instanceType": {
             "value": "{{ instanceType }}"
