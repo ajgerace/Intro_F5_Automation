@@ -15,7 +15,7 @@
             "value": "{{ instanceName }}" 
         }, 
         "instanceType": {
-            "value": "{{ instanceType }}"
+            "value": "Standard_D3_v2"
         }, 
         "imageName": {
             "value": "{{ imageName }}"
